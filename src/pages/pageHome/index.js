@@ -15,9 +15,9 @@ export default function PageHome(){
 
     return(
         <div>
-            <div className='flex items-center justify-end min-w-screen h-20 bg-gray-300'>
+            <div className='flex items-center justify-end h-20 bg-gray-200 min-w-screen'>
                 <Link to = '/'/>
-                <button onClick={gotoLogin} className="flex bg-red-900 text-white rounded-lg border-none py-3 px-8 m-1 text-lg cursor-pointer">Fazer login</button>
+                <button onClick={gotoLogin} className="flex px-8 py-3 m-1 text-lg text-white bg-red-900 border-none rounded-lg cursor-pointer">Fazer login</button>
             </div>
             <div className="mx-12 my-12">
                 <h1 className="my-2 text-3xl font-bold">Quem somos? </h1>
