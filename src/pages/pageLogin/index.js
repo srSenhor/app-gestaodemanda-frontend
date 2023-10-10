@@ -52,36 +52,36 @@ export default function PageLogin() {
     }
 
     return(
-        <div className="flex top-0 left-0 fixed w-full bg-red-950">
-            <div className="flex  flex-grow flex-shrink w-3/5 bg-white">
-                <form className="py-10 px-20 mx-auto">
+        <div className="fixed top-0 left-0 flex w-full bg-red-950">
+            <div className="flex flex-grow flex-shrink w-3/5 bg-white">
+                <form className="px-20 py-10 mx-auto">
                     <img src='../images/logo.png' alt='logo' className="mb-5"/>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Nome</label>
-                            <input type="text" name="nome" placeholder="Insira seu nome completo aqui" className="border border-solid border-red-950 rounded-2xl h-10 w-full text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Nome</label>
+                            <input type="text" name="nome" placeholder="Insira seu nome completo aqui" className="w-full h-10 px-4 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
                     <div className="mb-10">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Senha</label>
-                            <input type="password" name="password" placeholder="Insira a sua senha aqui"  className="border border-solid border-red-950 rounded-2xl h-10 w-full mb-5 text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Senha</label>
+                            <input type="password" name="password" placeholder="Insira a sua senha aqui"  className="w-full h-10 px-4 mb-5 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
-                    <div className="mt-20 flex justify-center">
-                        <button onClick={validate} className="w-1/2 h-10 border border-solid border-red-950 rounded-2xl cursor-pointer mr-10 bg-red-950 text-white">Login</button>
-                        <button onClick={gotoHome} className="w-1/2 h-10 border border-solid border-red-950 rounded-2xl cursor-pointer ml-10 bg-white text-red-950">Cancelar</button>
+                    <div className="flex justify-center mt-20">
+                        <button onClick={validate} className="w-1/2 h-10 mr-10 text-white border border-solid cursor-pointer border-red-950 rounded-2xl bg-red-950">Login</button>
+                        <button onClick={gotoHome} className="w-1/2 h-10 ml-10 bg-white border border-solid cursor-pointer border-red-950 rounded-2xl text-red-950">Cancelar</button>
                     </div>
-                    <div className="text-black flex justify-center mt-5">
+                    <div className="flex justify-center mt-5 text-black">
                         <p>Ainda não possui uma conta? <Link to='/signup' className="text-blue-500 underline">Cadastre-se aqui!</Link></p>
                     </div>
                 </form>
             </div>
             <div className="flex justify-center">
-                <img src='../images/login.png' alt='Imagem de pessoas conversando' className="min-w-full object-cover"/>
+                <img src='../images/login.png' alt='Imagem de pessoas conversando' className="object-cover min-w-full"/>
             </div>
         </div>
     )

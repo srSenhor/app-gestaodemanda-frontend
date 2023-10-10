@@ -2,21 +2,9 @@ import { useEffect, useState } from "react"
 import { Link, useLocation } from "react-router-dom"
 import axios from "axios"
 import Demanda from "../../components/demanda";
+import Modal from "../../components/modal";
 
-/*const prod = [
-    {title:'Software de Atendimento', notes:'Tá indo'},
-    {title:'Software de Balanceamento', notes:'Tá indo'},
-    {title:'Produto sem nome', notes:'Tá indo'},
-    {title:'Programa de receitas', notes:'Tá indo'},
-    {title:'Produto sem nome', notes:'Tá indo'},
-    {title:'Produto sem nome', notes:'Tá indo'},
-    {title:'Software 5', notes:'Tá indo'},
-    {title:'Software 6', notes:'Tá indo'},
-    {title:'Software 7', notes:'Tá indo'},
-    {title:'Software 8', notes:'Tá indo'},
-    {title:'Software 9', notes:'Tá indo'},
-    {title:'Software 39', notes:'Tá indo'},
-];*/
+const URL_BASE = 'http://localhost:8080'
 
 export default function PageMain(){
 
@@ -38,13 +26,13 @@ export default function PageMain(){
 
         switch (user.tipoUsuario) {
             case 0:
-                url = `http://localhost:8080/api/demanda/cliente/${user.uuid}`;
+                url = `${URL_BASE}/api/demanda/cliente/${user.uuid}`;
                 break;
             case 1:
-                url = `http://localhost:8080/api/demanda/emAnalise`;
+                url = `${URL_BASE}/api/demanda/emAnalise`;
                 break;
             case 2:
-                url = `http://localhost:8080/api/demanda/dev/${user.uuid}`;
+                url = `${URL_BASE}/api/demanda/dev/${user.uuid}`;
                 break;
             default:
                 break;
@@ -71,6 +59,34 @@ export default function PageMain(){
                 setDems(response.data)
             }
         }).catch( error => console.log(error) )
+    }
+
+    const createDem = () => {
+        document.addEventListener('DOMContentLoaded', () => {
+            let dd = new Date().getDay();
+            let mm = new Date().getMonth();
+            let aaaa = new Date().getFullYear();
+    
+            let dem = {
+                'title': document.getElementById('title').value,
+                'desc': document.getElementById('desc').value,
+                'date': `${dd}/${mm}/${aaaa}`
+            }
+    
+            axios({
+                method: 'POST',
+                url: `${URL_BASE}/api/demanda`,
+                data:{
+                    titulo: dem.title,
+                    descricao: dem.desc,
+                    uuidCliente: user.uuidcliente,
+                    dataCriacao: dem.date
+                }
+            }).then(response => {
+                setRegDem(false)
+                console.log(response.data)
+            }).catch( error => console.log(error))
+        })
     }
 
     const buttonService = () => {
@@ -121,8 +137,8 @@ export default function PageMain(){
                         {grupo.map((demanda, subIndex) => (
                             <Demanda
                                 key={subIndex}
-                                title={demanda.titulo}
-                                notes={demanda.descricao}
+                                data={demanda}
+                                userType={user.tipoUsuario}
                             />
                         ))}
                     </div>
@@ -133,17 +149,31 @@ export default function PageMain(){
                 {user.tipoUsuario}
             </div>
             <div className="fixed bottom-2 right-3">
-                <div className="w-16 h-16 p-1 bg-red-900 border border-red-900 border-solid rounded-full cursor-pointer">
+                <div className="p-1 bg-red-900 border border-red-900 border-solid rounded-full cursor-pointer w-14 h-14">
                     <img
                     onClick={buttonService}
                     src="../images/dem.svg"
                     alt="botao criar"
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full p-1 "
                     />
                 </div>
             </div>
 
-            {/* Aqui vão os modais */}
+            {/* Modal demanda */}
+            <Modal isOpen={regDem} setOpenModal={setRegDem}>
+                <div className="flex justify-left">
+                    <h1 className="mx-6 my-2 text-3xl font-bold">Criar demanda</h1>
+                </div>
+                <div className="flex flex-col justify-between p-10 h-[calc(100% - 3rem)]">
+                    <div className="mb-10">
+                        <label id="title-dem" className="text-xl font-bold text-[#9A5330]">Título</label>
+                        <input id="title-dem" type="text" placeholder="Titulo do produto" className="border border-solid border-[#640D14] rounded-2xl h-40px w-full mb-10 p-2"/>
+                        <label id="desc-dem" className="text-xl font-bold text-[#9A5330]">Descrição</label>
+                        <textarea id="desc-dem" placeholder="Descrição do produto" className="border border-solid border-[#640D14] font-sans w-full h-48 p-2 rounded-2xl resize-none"/>
+                    </div>
+                    <button onClick={createDem()} className="cursor-pointer h-12 w-1/6 border-none rounded-2 bg-[#329A97] text-white text-base font-bold self-end ">Cadastrar pedido</button>
+                </div>
+            </Modal>
         </div>
     );
 }
