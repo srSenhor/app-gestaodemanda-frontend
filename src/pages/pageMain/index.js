@@ -8,58 +8,13 @@ const URL_BASE = 'http://localhost:8080'
 
 export default function PageMain(){
 
-    useEffect( () => {
-        document.title = `Dev4U()`
-        loadDems()
-    }, [])
-
     const location = useLocation();
     const [user, setUser] = useState(location.state.user);
     const [dems, setDems] = useState([]);
-    const [count, setCount] = useState();
+    const [selectedDem, setSelectedDem] = useState();
     const [regDem, setRegDem] = useState(false);
     const [regTask, setRegTask] = useState(false);
     const demsPerRow = 5;
-
-    const loadDems = () => {
-        let url
-
-        switch (user.tipoUsuario) {
-            case 0:
-                url = `${URL_BASE}/api/demanda/cliente/${user.uuid}`;
-                break;
-            case 1:
-                url = `${URL_BASE}/api/demanda/emAnalise`;
-                break;
-            case 2:
-                url = `${URL_BASE}/api/demanda/dev/${user.uuid}`;
-                break;
-            default:
-                break;
-        }
-
-        axios({
-            method: 'GET',
-            headers: {
-                "Content-Type":"application/json; charset=UTF-8",
-            },
-            url: url,
-        }).then( response => {
-            if( user.tipoUsuario === 2 ){
-                let filtrDems = []
-
-                for (let x of response.data) {
-                    if (x.situacao === 1) {
-                        filtrDems.push(x)
-                    }
-                }
-                
-                setDems(filtrDems)
-            } else {
-                setDems(response.data)
-            }
-        }).catch( error => console.log(error) )
-    }
 
     const createDem = () => {
         document.addEventListener('DOMContentLoaded', () => {
@@ -85,7 +40,14 @@ export default function PageMain(){
             }).then(response => {
                 setRegDem(false)
                 console.log(response.data)
-            }).catch( error => console.log(error))
+            }).catch( error => {
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                } else {
+                    console.error('Erro na solicitação:', error.message);
+                }
+            })
         })
     }
 
@@ -101,11 +63,58 @@ export default function PageMain(){
         }
     }
 
+    const changeSelectedDem = (dem) => {
+        setSelectedDem(dem)
+    }
+
     const demsGroups = [];
     for (let i = 0; i < dems.length; i += demsPerRow) {
         demsGroups.push(dems.slice(i, i + demsPerRow));
     }
 
+    useEffect( () => {
+        document.title = `Dev4U()`
+        const loadDems = () => {
+            let url
+    
+            switch (user.tipoUsuario) {
+                case 0:
+                    url = `${URL_BASE}/api/demanda/cliente/${user.uuid}`;
+                    break;
+                case 1:
+                    url = `${URL_BASE}/api/demanda/emAnalise`;
+                    break;
+                case 2:
+                    url = `${URL_BASE}/api/demanda/dev/${user.uuid}`;
+                    break;
+                default:
+                    break;
+            }
+    
+            axios({
+                method: 'GET',
+                headers: {
+                    "Content-Type":"application/json; charset=UTF-8",
+                },
+                url: url,
+            }).then( response => {
+                if( user.tipoUsuario === 2 ){
+                    let filtrDems = []
+    
+                    for (let x of response.data) {
+                        if (x.situacao === 1) {
+                            filtrDems.push(x)
+                        }
+                    }
+                    
+                    setDems(filtrDems)
+                } else {
+                    setDems(response.data)
+                }
+            }).catch( error => console.log(error) )
+        }
+        loadDems();
+    }, [user])
 
     return (
         <div>
@@ -171,7 +180,33 @@ export default function PageMain(){
                         <label id="desc-dem" className="text-xl font-bold text-[#9A5330]">Descrição</label>
                         <textarea id="desc-dem" placeholder="Descrição do produto" className="border border-solid border-[#640D14] font-sans w-full h-48 p-2 rounded-2xl resize-none"/>
                     </div>
-                    <button onClick={createDem()} className="cursor-pointer h-12 w-1/6 border-none rounded-2 bg-[#329A97] text-white text-base font-bold self-end ">Cadastrar pedido</button>
+                    <button onClick={createDem} className="cursor-pointer h-12 w-1/6 border-none rounded-2 bg-[#329A97] text-white text-base font-bold self-end ">Cadastrar pedido</button>
+                </div>
+            </Modal>
+
+            {/* Modal tarefa */}
+            <Modal isOpen={regTask} setOpenModal={setRegTask}>
+                <div className="flex justify-left">
+                    <h1 className="mx-8 my-1 text-3xl font-bold">Criar tarefa</h1>
+                </div>
+                <div className="flex flex-col justify-between p-10 h-[calc(100% - 3rem)]">
+                    <div className="flex flex-col w-3/6 mb-1">
+                        <label id="produto" className="text-xl font-bold text-[#9A5330]">Produto</label>
+                        <select id="produto" onChange={ (e) => { changeSelectedDem(e.target.value) }} className="w-3/5 h-10 px-2 bg-white border rounded-lg border-red-950 text-red-950">
+                            {demsGroups.map((dem, index)=>{
+                                return(
+                                    <option key={index}>{dem.titulo}</option>
+                                )
+                            })} 
+                        </select>
+                    </div>    
+                    <div className="mb-1">
+                        <label id="title-dem" className="text-xl font-bold text-[#9A5330]">Nome da tarefa</label>
+                        <input id="title-dem" type="text" placeholder="Titulo do produto" className="border border-solid border-[#640D14] rounded-2xl h-40px w-full mb-10 p-2"/>
+                        <label id="desc-dem" className="text-xl font-bold text-[#9A5330]">Descrição</label>
+                        <textarea id="desc-dem" placeholder="Descrição do produto" className="border border-solid border-[#640D14] font-sans w-full h-48 p-2 rounded-2xl resize-none"/>
+                    </div>
+                    <button onClick={() => {alert('Ainda não foi implementado.')}} className="cursor-pointer h-12 w-1/6 border-none rounded-2 bg-[#329A97] text-white text-base font-bold self-end ">Cadastrar tarefa</button>
                 </div>
             </Modal>
         </div>

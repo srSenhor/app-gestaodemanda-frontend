@@ -5,10 +5,6 @@ import axios from "axios"
 
 export default function PageSignup(){
 
-    useEffect( () => {
-        document.title = `Signup: Dev4U()`
-    }, [])
-
     const navigate = useNavigate();
     const [userType, setUserType] = useState(0);
 
@@ -65,42 +61,46 @@ export default function PageSignup(){
         navigate('/login')
     }
 
+    useEffect( () => {
+        document.title = `Signup: Dev4U()`
+    }, [])
+    
     return(
-        <div className="flex top-0 left-0 fixed w-full bg-red-950 overflow-y-hidden h-screen">
-            <div className="flex  flex-grow flex-shrink w-1/2 bg-white max-h-screen overflow-y-auto">
-                <form className="py-10 px-20 mx-auto ">
+        <div className="fixed top-0 left-0 flex w-full h-screen overflow-y-hidden bg-red-950">
+            <div className="flex flex-grow flex-shrink w-1/2 max-h-screen overflow-y-auto bg-white">
+                <form className="px-20 py-10 mx-auto ">
                     <img src='../images/logo.png' alt='logo' className="mb-5"/>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Nome</label>
-                            <input type="text" name="nome" placeholder="Insira seu nome completo aqui" className="border border-solid border-red-950 rounded-2xl h-10 w-full text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Nome</label>
+                            <input type="text" name="nome" placeholder="Insira seu nome completo aqui" className="w-full h-10 px-4 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">E-mail</label>
-                            <input type="text" name="nome" placeholder="Insira seu melhor e-mail aqui" className="border border-solid border-red-950 rounded-2xl h-10 w-full text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">E-mail</label>
+                            <input type="text" name="nome" placeholder="Insira seu melhor e-mail aqui" className="w-full h-10 px-4 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Confirme seu e-mail</label>
-                            <input type="text" name="nome" placeholder="Confirme seu e-mail" className="border border-solid border-red-950 rounded-2xl h-10 w-full text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Confirme seu e-mail</label>
+                            <input type="text" name="nome" placeholder="Confirme seu e-mail" className="w-full h-10 px-4 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Contato</label>
-                            <input type="text" name="nome" placeholder="Insira um número de telefone ou e-mail aqui" className="border border-solid border-red-950 rounded-2xl h-10 w-full text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Contato</label>
+                            <input type="text" name="nome" placeholder="Insira um número de telefone ou e-mail aqui" className="w-full h-10 px-4 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
-                    <div className="flex w-3/4 items-center my-3 mx-2/5">
-                        <select onChange={ (e) => { changeType(e.target.value) }} className="border border-red-950 rounded-lg px-2 w-3/5 h-10 text-red-950 bg-white">
+                    <div className="flex items-center w-3/4 my-3 mx-2/5">
+                        <select onChange={ (e) => { changeType(e.target.value) }} className="w-3/5 h-10 px-2 bg-white border rounded-lg border-red-950 text-red-950">
                             <option>Cliente</option>
                             <option>Avaliador</option>
                             <option>Desenvolvedor</option>
@@ -109,26 +109,26 @@ export default function PageSignup(){
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Senha</label>
-                            <input type="password" name="password" placeholder="Insira uma senha forte aqui"  className="border border-solid border-red-950 rounded-2xl h-10 w-full mb-5 text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Senha</label>
+                            <input type="password" name="password" placeholder="Insira uma senha forte aqui"  className="w-full h-10 px-4 mb-5 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
                     <div className="mb-2">
                         <div className="flex flex-col">
-                            <label className="block text-red-950 text-lg ml-4">Confirme sua senha</label>
-                            <input type="password" name="password" placeholder="Confirme sua senha"  className="border border-solid border-red-950 rounded-2xl h-10 w-full mb-5 text-base px-4"/>
+                            <label className="block ml-4 text-lg text-red-950">Confirme sua senha</label>
+                            <input type="password" name="password" placeholder="Confirme sua senha"  className="w-full h-10 px-4 mb-5 text-base border border-solid border-red-950 rounded-2xl"/>
                         </div>
                     </div>
 
-                    <div className="mt-20 flex justify-center">
-                        <button onClick={validate} className="w-1/2 h-10 border border-solid border-red-950 rounded-2xl cursor-pointer mr-10 bg-red-950 text-white">Cadastrar</button>
-                        <button onClick={gotoLogin} className="w-1/2 h-10 border border-solid border-red-950 rounded-2xl cursor-pointer ml-10 bg-white text-red-950">Voltar</button>
+                    <div className="flex justify-center mt-20">
+                        <button onClick={validate} className="w-1/2 h-10 mr-10 text-white border border-solid cursor-pointer border-red-950 rounded-2xl bg-red-950">Cadastrar</button>
+                        <button onClick={gotoLogin} className="w-1/2 h-10 ml-10 bg-white border border-solid cursor-pointer border-red-950 rounded-2xl text-red-950">Voltar</button>
                     </div>
                 </form>
             </div>
             <div className="flex justify-center">
-                <img src='../images/login.png' alt='Imagem de pessoas conversando' className="w-full h-auto min-w-full object-cover "/>
+                <img src='../images/login.png' alt='Imagem de pessoas conversando' className="object-cover w-full h-auto min-w-full "/>
             </div>
         </div>
     )

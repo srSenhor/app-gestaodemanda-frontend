@@ -4,10 +4,6 @@ import axios from "axios";
 
 export default function Demanda(props) {
 
-    useEffect( () => {
-        getDevs()
-    }, [])
-
     const [isOpen, setModalOpen] = useState(false);
     const [priority, setPriority] = useState(['Baixa', 'Média', 'Alta']);
     const [devs, setDevs] = useState([]);
@@ -40,8 +36,15 @@ export default function Demanda(props) {
             url: 'http://localhost:8080/api/usuario/devs'
         }).then( response => {
             setDevs(response.data)
-            console.log(devs)
-        }).catch( error => console.log( error ))
+            console.log('teste')
+        }).catch( error => {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+            } else {
+                console.error('Erro na solicitação:', error.message);
+            }
+        })
     }
 
     const placeholder = () => {
@@ -58,20 +61,27 @@ export default function Demanda(props) {
         }
 
         axios({
-            method: 'PUT',
+            method: 'put',
             url: 'http://localhost:8080/api/demanda',
             data: {
                 uuid: props.data.uuid,
                 uuidDev: uuid,
-                dataEncerramento: 'À definir',
+                dataEncerramento: "À definir",
                 prioridade: priority,
                 situacao: 1,
                 prazo: 0
             }
         }).then( response => {
             setModalOpen(false)
-            console.log('Enviado com sucesso: ' + response.data);
-        }).catch( error => console.log(error))
+            alert('Encaminhado com sucesso para ' + selectedDev)
+        }).catch( error => {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+            } else {
+                console.error('Erro na solicitação:', error.message);
+            }
+        })
     }
 
     const finishDem = (status) => {
@@ -92,15 +102,18 @@ export default function Demanda(props) {
         setModalOpen(true);
     };
     
+    useEffect( () => {
+        getDevs()
+    },[])
 
     switch (props.userType) {
         case 0:
             return (    
                 <div className="relative border border-gray-400 border-solid rounded-xl w-1/5 max-w-2/5 min-h-[18vh] m-2 overflow-hidden">
-                    <p className="w-full max-w-full p-1 font-bold truncate">{props.data.titulo}</p>
-                    <p className="w-full max-w-full p-1 font-light truncate">Detalhes: {props.data.descricao}</p>
+                    <p className="w-full max-w-full p-2 font-bold truncate">{props.data.titulo}</p>
+                    <p className="w-full max-w-full p-2 font-light truncate">Detalhes: {props.data.descricao}</p>
                     <div className="absolute bottom-0 w-full">
-                        <button onClick={openModal} className="w-full py-2 font-bold text-white bg-red-700 border-none cursor-pointer rounded-b-xl max-h-20">Ver detalhes</button>
+                        <button onClick={openModal} className="w-full py-1 font-bold text-white bg-red-700 border-none cursor-pointer rounded-b-xl max-h-20">Ver detalhes</button>
                     </div>
         
                     {/* Modal detalhes */}
@@ -136,10 +149,10 @@ export default function Demanda(props) {
         case 1:
             return (    
                 <div className="relative border border-gray-400 border-solid rounded-xl w-1/5 max-w-2/5 min-h-[18vh] m-2 overflow-hidden">
-                    <p className="w-full max-w-full p-1 font-bold truncate">{props.data.titulo}</p>
-                    <p className="w-full max-w-full p-1 font-light truncate">Detalhes: {props.data.descricao}</p>
+                    <p className="w-full max-w-full p-2 font-bold truncate">{props.data.titulo}</p>
+                    <p className="w-full max-w-full p-2 font-light truncate">Detalhes: {props.data.descricao}</p>
                     <div className="absolute bottom-0 w-full">
-                        <button onClick={openModal} className="w-full py-2 font-bold text-white bg-red-700 border-none cursor-pointer rounded-b-xl max-h-20">Ver detalhes</button>
+                        <button onClick={openModal} className="w-full py-1 font-bold text-white bg-red-700 border-none cursor-pointer rounded-b-xl max-h-20">Ver detalhes</button>
                     </div>
         
                     {/* Modal detalhes */}
@@ -185,9 +198,56 @@ export default function Demanda(props) {
                 </div>
             );
         case 2:
-            return(
-                <>Demanda do desenvolvedor</>
-            )
+            return (    
+                <div className="relative border border-gray-400 border-solid rounded-xl w-1/5 max-w-2/5 min-h-[18vh] m-2 overflow-hidden">
+                    <p className="w-full max-w-full p-2 font-bold truncate">{props.data.titulo}</p>
+                    <p className="w-full max-w-full p-2 font-light truncate">Detalhes: {props.data.descricao}</p>
+                    <div className="absolute bottom-0 w-full">
+                        <button onClick={openModal} className="w-full py-1 font-bold text-white bg-red-700 border-none cursor-pointer rounded-b-xl max-h-20">Ver detalhes</button>
+                    </div>
+        
+                    {/* Modal detalhes */}
+                    <Modal isOpen={isOpen} setOpenModal={setModalOpen}>
+                        <div className="flex flex-col justify-between p-5 h-[calc(100% - 3rem)]">
+                            <div>
+                                <div className="flex flex-row mb-1 text-lg font-bold">
+                                    Nome do produto: <div className="px-1 text-xl font-light">{props.data.titulo}</div>    
+                                </div>
+                                <div className="flex flex-row mb-5 text-lg font-bold">
+                                    Descrição: <div className="px-1 text-xl font-light">{props.data.descricao}</div>    
+                                </div>
+                                <div className="flex flex-row mb-1 text-lg font-bold">
+                                    Status: <div className="px-1 text-xl font-light">{props.data.situacao}</div>    
+                                </div>
+                                <div className="flex flex-row mb-5 text-lg font-bold text-red-600">
+                                    Prioridade: <div className="px-1 text-xl font-light">{props.data.prioridade}</div>    
+                                </div>
+                                <div className="flex flex-row text-lg font-bold">
+                                    Criado em: <div className="px-1 text-xl font-light">{props.data.dataCriacao}</div>    
+                                </div>
+                            </div>
+                        </div>
+                        <div className="flex ">
+                            <div className="flex items-center w-5/6">
+                                <select onChange={ (e) => { changeSelectedDev(e.target.value) }} className="w-3/5 h-10 px-2 bg-white border rounded-lg border-red-950 text-red-950">
+                                    {devs.map((dev, index)=>{
+                                        return(
+                                            <option key={index}>{dev.email}</option>
+                                        )
+                                    })} 
+                                </select>
+                            </div>    
+                            <div className="flex flex-col justify-end w-full p-4 text-lg font-bold ">
+                                <div className="flex flex-col items-center w-1/6 ml-auto text-2xl font-bold text-red-600">
+                                    Prazo<div className="px-1 text-xl font-light">{props.data.prazo} dias</div>    
+                                </div>
+                                <button onClick={finishDem} className="mb-1 cursor-pointer h-12 w-2/6 border-none rounded-lg bg-[#329A97] text-white text-base font-bold self-end ">Deferir demanda</button>
+                                <button onClick={sendDem} className="cursor-pointer h-12 w-2/6 border-none rounded-lg bg-[#329A97] text-white text-base font-bold self-end ">Encaminhar demanda</button>
+                            </div>
+                        </div>
+                    </Modal>
+                </div>
+            );
         default:
             return (
                 <>Tem nada aqui</>

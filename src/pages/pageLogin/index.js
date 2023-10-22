@@ -4,10 +4,6 @@ import axios from 'axios';
 
 export default function PageLogin() {
 
-    useEffect( () => {
-        document.title = `Login: Dev4U()`;
-    }, [])
-
     const navigate = useNavigate();
 
     const setCredentials = (name) => {        
@@ -51,6 +47,10 @@ export default function PageLogin() {
         navigate('/')
     }
 
+    useEffect( () => {
+        document.title = `Login: Dev4U()`;
+    }, [])
+    
     return(
         <div className="fixed top-0 left-0 flex w-full bg-red-950">
             <div className="flex flex-grow flex-shrink w-3/5 bg-white">

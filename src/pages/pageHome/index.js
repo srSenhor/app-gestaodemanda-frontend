@@ -3,15 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 
 export default function PageHome(){
 
-    useEffect( () => {
-        document.title = `Home: Dev4U()`;
-    }, [])
-
-
     const navigate = useNavigate();
     const gotoLogin = () => {
         navigate('/login');
     }
+
+    useEffect( () => {
+        document.title = `Home: Dev4U()`;
+    }, [])
 
     return(
         <div>
